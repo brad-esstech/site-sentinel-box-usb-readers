@@ -1,0 +1,84 @@
+set daemon 10            # check services at 10 second intervals
+  with start delay 5    # optional: delay the first check by 5 seconds
+set log /var/log/monit.log
+set idfile /var/lib/monit/id
+set statefile /var/lib/monit/state
+set eventqueue
+  basedir /var/lib/monit/events # set the base directory where events will be stored
+  slots 100                     # optionally limit the queue size
+set mmonit https://monit:monit@monit.sitesentinel.com.au/collector
+set httpd port 2812 and
+  allow monit.sitesentinel.com.au
+  allow localhost        # allow localhost to connect to the server and
+  allow admin:R3HhezoZr=7B3n?N      # require user 'admin' with password 'monit'
+#
+# Mail settings
+set mail-format {
+  from: support@sitesentinel.com.au
+  subject: monit alert --  $EVENT ($HOST)
+  message: $EVENT Service $SERVICE
+                Date:        $DATE
+                Action:      $ACTION
+                Host:        $HOST
+                Description: $DESCRIPTION
+
+           Your faithful employee,
+           Monit }
+set mailserver email-smtp.ap-southeast-2.amazonaws.com
+  port 587
+  username "AKIA2TVSISE2FOODMLUR" password "BB4ztr0KXMz+AzqMwsCurG8rg6ebyktZYdwWxcDFxtx8"
+  using tls with timeout 30 seconds
+set alert jb@sitesentinel.com.au # email address which will receive monit alerts
+#
+check process reader_ingress with pidfile /home/ubuntu/site-sentinel-box-usb-readers/pids/reader_ingress.pid
+  start program = "/usr/bin/sudo /usr/bin/systemctl start reader_ingress"
+    as uid "ubuntu" and gid "ubuntu"
+  stop program  = "/usr/bin/sudo /usr/bin/systemctl stop reader_ingress"
+    as uid "ubuntu" and gid "ubuntu"
+  if cpu > 80% for 2 cycles then restart
+  if totalmem > 200.0 MB for 2 cycles then restart
+#
+check process reader_egress with pidfile /home/ubuntu/site-sentinel-box-usb-readers/pids/reader_egress.pid
+  start program = "/usr/bin/sudo /usr/bin/systemctl start reader_egress"
+    as uid "ubuntu" and gid "ubuntu"
+  stop program  = "/usr/bin/sudo /usr/bin/systemctl stop reader_egress"
+    as uid "ubuntu" and gid "ubuntu"
+  if cpu > 80% for 2 cycles then restart
+  if totalmem > 200.0 MB for 2 cycles then restart
+#
+check host redis.host with address 127.0.0.1
+  if failed port 6379 protocol redis then alert
+#
+check process redis-server with pidfile "/var/run/redis/redis-server.pid"
+  start program = "/etc/init.d/redis-server start"
+  stop program = "/etc/init.d/redis-server stop"
+  if failed host 127.0.0.1 port 6379 then restart
+  if 5 restarts within 5 cycles then timeout
+#
+check process sidekiq matching 'sidekiq'
+  start program  = "/usr/bin/sudo /usr/bin/systemctl start sidekiq"
+  stop program  = "/usr/bin/sudo /usr/bin/systemctl stop sidekiq"
+#
+## Check general system resources such as load average, cpu and memory usage.
+#
+check system $HOST
+  if loadavg (1min) per core > 2 for 5 cycles then alert
+  if loadavg (5min) per core > 1.5 for 10 cycles then alert
+  if cpu usage > 95% for 10 cycles then alert
+  if memory usage > 75% then alert
+  if swap usage > 25% then alert
+#
+## Check filesystem space usage, inode usage and disk I/O.
+#
+check filesystem "root" with path /dev/mmcblk0p2
+  if space usage > 80% for 3 times within 10 cycles then alert
+  if space usage > 99% then stop
+  if inode usage > 200000 then alert
+  if inode usage > 75% then alert
+  if inode usage > 99% then stop
+  if read rate > 1 MB/s for 5 cycles then alert
+  if read rate > 500 operations/s for 5 cycles then alert
+  if write rate > 10 MB/s for 5 cycles then alert
+  if write rate > 500 operations/s for 5 cycles then alert
+  if service time > 1000 milliseconds for 3 times within 5 cycles then alert
+  group server

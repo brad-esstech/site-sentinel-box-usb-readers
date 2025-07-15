@@ -1,1 +1,3 @@
-# site-sentinel-box-usb-readers
+# site-sentinel-box
+
+## See notes in wiki

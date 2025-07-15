@@ -1,0 +1,6 @@
+# Uses BCM pins, not BOARD pins
+
+ingress_pin = 26 # eg 26, depends on relay board
+egress_pin = 20 # eg 20, depends on relay board
+ingress2_pin = 21 # eg 21, depends on relay board
+egress2_pin = xx # eg xx, depends on relay board
