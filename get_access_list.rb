@@ -3,8 +3,8 @@
 require_relative 'config.rb' # load site config
 require 'httparty'
 
-api_url = "https://www.site-sentinel-staging-b37addec917d.herokuapp.com/api/gates/checks/batch"
-# api_url = "https://www.sitesentinel.com.au/api/gates/access_tokens"
+#api_url = "https://staging.sitesentinel.com/api/gates/checks/batch"
+api_url = "https://www.sitesentinel.com.au/api/gates/access_tokens"
 
 response = HTTParty.get(api_url, {
   headers: {"Authorization" => "Token #{GATE_ID}" }
