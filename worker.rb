@@ -29,8 +29,8 @@ class AccessGrantedWorker
     end
       
     payload = JSON.pretty_generate(checks: checks)
-    api_url = "https://www.site-sentinel-staging-b37addec917d.herokuapp.com/api/gates/checks/batch"
-    # api_url = "https://www.sitesentinel.com.au/api/gates/checks/batch"
+    # api_url = "https://staging.sitsentinel.com/api/gates/checks/batch"
+     api_url = "https://www.sitesentinel.com.au/api/gates/checks/batch"
     
     response = HTTParty.post(api_url,
     { 
@@ -69,8 +69,8 @@ class AccessDeniedWorker
     end
 
     payload = JSON.pretty_generate(checks: checks)
-    api_url = "https://www.site-sentinel-staging-b37addec917d.herokuapp.com/api/gates/checks/batch"
-    # api_url = "https://www.site-sentinel-staging-b37addec917d.herokuapp.com/api/gates/checks/batch"
+    # api_url = "https://staging.sitesentinel.com/api/gates/checks/batch"
+     api_url = "https://www.site-sentinel-staging-b37addec917d.herokuapp.com/api/gates/checks/batch"
     
     response = HTTParty.post(api_url,
     { 
