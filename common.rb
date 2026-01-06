@@ -276,16 +276,7 @@ def access_granted(card, direction)
     @log.debug "firing egress relay..."
     out_action = fork { exec("python3 /home/ubuntu/site-sentinel-box-usb-readers/solenoid_egress.py") }
     Process.detach(out_action)
-  elsif direction == "in2"
-    @log.debug "firing ingress2 relay..."
-    in_action = fork { exec("python3 /home/ubuntu/site-sentinel-box-usb-readers/solenoid_ingress2.py") }
-    Process.detach(in2_action)
-    elsif direction == "out2"
-    @log.debug "firing egress2 relay..."
-    out_action = fork { exec("python3 /home/ubuntu/site-sentinel-box-usb-readers/solenoid_egress2.py") }
-    Process.detach(out2_action)
-  end
-
+   end
   access_allowed_beeps
 end
 
