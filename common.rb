@@ -146,30 +146,6 @@ def initialise_and_connect_to_ingress_reader
   @log.info "Connected to reader."
 end
 
-def initialise_and_connect_to_ingress2_reader
-
-  usb_only = set_device_type_to_usb
-  if usb_only == false
-    @log.error "Could not set PCProxLib device types to USB only!"
-    abort
-  end
-  
-  @log.info "Connecting to reader via SDK..."
-  
-  @log.info "Searching for reader with ESN of #{INGRESS2_CARD_READER_ESN}..."
-  ingress2_reader_id = find_device(INGRESS2_CARD_READER_ESN)
-  
-  if ingress2_reader_id == nil
-    @log.error "Couldn't find reader with ESN of #{INGRESS2_CARD_READER_ESN}!"
-    abort
-  end
-  
-  @log.info "Reader ##{ingress2_reader_id} has an ESN of #{INGRESS2_CARD_READER_ESN}!"
-  
-  set_active_device(ingress_reader_id)
-  @log.info "Connected to reader."
-end
-
 def initialise_and_connect_to_egress_reader
 
   usb_only = set_device_type_to_usb
@@ -191,30 +167,6 @@ def initialise_and_connect_to_egress_reader
   @log.info "Reader ##{egress_reader_id} has an ESN of #{EGRESS_CARD_READER_ESN}!"
   
   set_active_device(egress_reader_id)
-  @log.info "Connected to reader."
-end
-
-def initialise_and_connect_to_egress2_reader
-
-  usb_only = set_device_type_to_usb
-  if usb_only == false
-    @log.error "Could not set PCProxLib device types to USB only!"
-    abort
-  end
-  
-  @log.info "Connecting to reader via SDK..."
-  
-  @log.info "Searching for reader with ESN of #{EGRESS2_CARD_READER_ESN}..."
-  egress_reader_id = find_device(EGRESS2_CARD_READER_ESN)
-  
-  if egress2_reader_id == nil
-    @log.error "Couldn't find reader with ESN of #{EGRESS2_CARD_READER_ESN}!"
-    abort
-  end
-  
-  @log.info "Reader ##{egress2_reader_id} has an ESN of #{EGRESS2_CARD_READER_ESN}!"
-  
-  set_active_device(egress2_reader_id)
   @log.info "Connected to reader."
 end
 
@@ -460,8 +412,4 @@ end
 def reader_online(reader, direction)
   sleep 1.5 if direction == "egress" # so 'reader online' beeps happen separately, otherwise they happen at the same time
   reader.BeepNow(2, false)
-  sleep 3.0 if direction == "ingress2" # so 'reader online' beeps happen separately, otherwise they happen at the same time
-  reader.BeepNow(2, false)
-  sleep 4.5 if direction == "egress2" # so 'reader online' beeps happen separately, otherwise they happen at the same time
-  reader.BeepNow(2, false)  
 end
