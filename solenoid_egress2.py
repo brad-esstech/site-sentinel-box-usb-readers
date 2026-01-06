@@ -6,7 +6,7 @@ import config # config stuff
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(config.relay1_pin, GPIO.OUT)
-GPIO.output(config.relay_pin, GPIO.LOW) # relay closed
+GPIO.output(config.relay1_pin, GPIO.LOW) # relay closed
 time.sleep(2)
 GPIO.output(config.relay1_pin, GPIO.HIGH) # relay open
 GPIO.cleanup()
