@@ -2,11 +2,11 @@ require 'rubygems'
 require 'daemons'
 
 working_directory  = File.dirname(File.expand_path(__FILE__))
-script = working_directory + '/reader_egress2.rb'
+script = working_directory + '/reader_relay1.rb'
 pid_folder = File.join(working_directory, 'pids') # directory where pid file will be stored
 
 Daemons.run_proc(
-  'reader_egress2', # name of daemon
+  'reader_relay1', # name of daemon
   :dir_mode => :normal,
   :dir => pid_folder,
 #  :backtrace => true,
